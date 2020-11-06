@@ -34,9 +34,9 @@ This project was developed with:
 
 ## 💻 The project
 
-Happy is an application that connects people to institutional help houses in order to make children's day happier.
+Happy is an application that connects people to institutional help houses or orphanages in order to make a child happier.
 
-Este projeto fez parte do Next Level Week 3 da RocketSeat e este repositório é a versão 2.0, implementando mais funcionalidades, descritas no tópico Desafio.
+This project was developed in Next Level Week 3 from RocketSeat. This repository is an improved version with more features as described in the Challenges topic.
 
 ## 🔖 Layout
 
