@@ -36,11 +36,11 @@ This project was developed with:
 
 Happy is an application that connects people to institutional help houses or orphanages in order to make a child happier.
 
-This project was developed in Next Level Week 3 from RocketSeat. This repository is an improved version with more features as described in the Challenges topic.
+This project was developed in Next Level Week 3 from Rocketseat. This repository is an improved version with more features as described in the Challenges topic.
 
 ## 🔖 Layout
 
-The links below you'll find web and mobile layouts. You need to have a [Figma](http://figma.com/) account to view them.
+In the links below, you'll find web and mobile layouts. You need to have a [Figma](http://figma.com/) account to view them.
 
 - [Layout Web](https://www.figma.com/file/mDEbnoojksG4w8sOxmudh3/Happy-Web)
 - [Layout Mobile](https://www.figma.com/file/X27FfVxAgy9f5IFa7ONlph/Happy-Mobile)
