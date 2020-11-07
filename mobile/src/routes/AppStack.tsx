@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -9,25 +9,13 @@ import OrphanageData from "../pages/CreateOrphanage/OrphanageData";
 import OrphanageDetails from "../pages/OrphanageDetails";
 import Header from "../components/Header";
 
-import { View } from "react-native";
 import OnboardingMain from "../pages/Onboarding/OnboardingMain";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import OnboardingContext from "../contexts/OnboardingContext";
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
-  const [onboardingDone, setOnboardingDone] = useState(false);
-
-  useEffect(() => {
-    async function checkOnboarding() {
-      const done = await AsyncStorage.getItem("onboardingDone");
-
-      console.log(done);
-      setOnboardingDone(done === "true");
-    }
-
-    checkOnboarding();
-  }, []);
+  const { onboardingDone } = useContext(OnboardingContext);
 
   return (
     <NavigationContainer>

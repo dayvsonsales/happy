@@ -1,8 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
 
-import Onboarding, { DotProps } from "react-native-onboarding-swiper";
+import Onboarding, { DotProps, Page } from "react-native-onboarding-swiper";
+import { useOnboardingContext } from "../../contexts/OnboardingContext";
 
 const Advance = ({ ...props }) => (
   <TouchableOpacity onPress={props.onPress}>
@@ -46,9 +47,35 @@ const Square = ({ selected }: DotProps) => {
   );
 };
 
+const pages: Page[] = [
+  {
+    backgroundColor: "#CEDEE5",
+    image: <Image source={require("../../../assets/onboarding/01.png")} />,
+    title: "Leve\nfelicidade\npara o\nmundo",
+    subtitle: "Visite orfanatos e mude o\ndia de muitas crianças.",
+  },
+  {
+    backgroundColor: "#CEDEE5",
+    image: <Image source={require("../../../assets/onboarding/02.png")} />,
+    title: "Escolha um orfanato no mapa e faça uma visita",
+    subtitle: "",
+    titleStyles: {
+      color: "#0089A5",
+      fontWeight: "bold",
+      fontSize: 32,
+      fontFamily: "Nunito_800ExtraBold",
+      textAlign: "right",
+      lineHeight: 36,
+      paddingLeft: 20,
+    },
+  },
+];
+
 const OnboardingMain: React.FC = () => {
+  const { updateOnboardingDone } = useOnboardingContext();
+
   async function onDone() {
-    await AsyncStorage.setItem("onboardingDone", "true");
+    await updateOnboardingDone(true);
   }
 
   return (
@@ -59,62 +86,43 @@ const OnboardingMain: React.FC = () => {
       onDone={onDone}
       NextButtonComponent={Advance}
       DoneButtonComponent={Advance}
-      containerStyles={{
-        flex: 1,
-        flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        padding: 30,
-      }}
-      imageContainerStyles={{
-        padding: 2,
-        alignItems: "center",
-        justifyContent: "center",
-        width: "100%",
-      }}
-      titleStyles={{
-        color: "#0089A5",
-        fontWeight: "bold",
-        fontSize: 48,
-        fontFamily: "Nunito_800ExtraBold",
-        textAlign: "justify",
-        lineHeight: 52,
-      }}
-      subTitleStyles={{
-        color: "#5C8599",
-        fontSize: 20,
-        fontFamily: "Nunito_600SemiBold",
-        textAlign: "justify",
-      }}
-      pages={[
-        {
-          backgroundColor: "#CEDEE5",
-          image: (
-            <Image source={require("../../../assets/onboarding/01.png")} />
-          ),
-          title: "Leve\nfelicidade\npara o\nmundo",
-          subtitle: "Visite orfanatos e mude o\ndia de muitas crianças.",
-        },
-        {
-          backgroundColor: "#CEDEE5",
-          image: (
-            <Image source={require("../../../assets/onboarding/02.png")} />
-          ),
-          title: "Escolha um orfanato no mapa e faça uma visita",
-          subtitle: "",
-          titleStyles: {
-            color: "#0089A5",
-            fontWeight: "bold",
-            fontSize: 32,
-            fontFamily: "Nunito_800ExtraBold",
-            textAlign: "right",
-            lineHeight: 36,
-            paddingLeft: 20,
-          },
-        },
-      ]}
+      containerStyles={styles.containerStyles}
+      imageContainerStyles={styles.imageContainerStyles}
+      titleStyles={styles.titleStyles}
+      subTitleStyles={styles.subTitleStyles}
+      pages={pages}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  containerStyles: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    padding: 30,
+  },
+  imageContainerStyles: {
+    padding: 2,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  titleStyles: {
+    color: "#0089A5",
+    fontWeight: "bold",
+    fontSize: 48,
+    fontFamily: "Nunito_800ExtraBold",
+    textAlign: "justify",
+    lineHeight: 52,
+  },
+  subTitleStyles: {
+    color: "#5C8599",
+    fontSize: 20,
+    fontFamily: "Nunito_600SemiBold",
+    textAlign: "justify",
+  },
+});
 
 export default OnboardingMain;

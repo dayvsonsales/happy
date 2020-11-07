@@ -1,14 +1,15 @@
-import React from 'react';
-import { StatusBar } from 'react-native'
+import React from "react";
+import { StatusBar } from "react-native";
 
-import { 
-  useFonts, 
-  Nunito_600SemiBold, 
-  Nunito_700Bold, 
-  Nunito_800ExtraBold
-} from '@expo-google-fonts/nunito';
+import {
+  useFonts,
+  Nunito_600SemiBold,
+  Nunito_700Bold,
+  Nunito_800ExtraBold,
+} from "@expo-google-fonts/nunito";
 
-import AppStack from './src/routes/AppStack';
+import AppStack from "./src/routes/AppStack";
+import { OnboardingProvider } from "./src/contexts/OnboardingContext";
 
 export default function App() {
   let [fontsLoaded] = useFonts({
@@ -21,10 +22,14 @@ export default function App() {
     return null;
   } else {
     return (
-      <>
-        <StatusBar backgroundColor="transparent" translucent barStyle="dark-content" />
+      <OnboardingProvider>
+        <StatusBar
+          backgroundColor="transparent"
+          translucent
+          barStyle="dark-content"
+        />
         <AppStack />
-      </>
+      </OnboardingProvider>
     );
   }
 }
