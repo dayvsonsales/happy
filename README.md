@@ -38,6 +38,8 @@ Happy is an application that connects people to institutional help houses or orp
 
 This project was developed in Next Level Week 3 from Rocketseat. This repository is an improved version with more features as described in the Challenges topic.
 
+Note: the project language is Portuguese.
+
 ## 🔖 Layout
 
 In the links below, you'll find web and mobile layouts. You need to have a [Figma](http://figma.com/) account to view them.
