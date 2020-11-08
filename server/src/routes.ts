@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import multerConfig from "./config/multer";
 import LoginController from "./controllers/auth/LoginController";
+import ResetPasswordController from "./controllers/auth/ResetPasswordController";
 
 import OrphanagesController from "./controllers/OrphanagesController";
 import UsersController from "./controllers/UsersController";
@@ -13,6 +14,8 @@ const upload = multer(multerConfig);
 
 routes.post("/users", UsersController.create);
 routes.post("/login", LoginController.create);
+routes.post("/reset", ResetPasswordController.create);
+routes.post("/reset-password/:token", UsersController.update);
 
 routes.use(AuthMiddleware);
 
