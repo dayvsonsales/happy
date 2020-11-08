@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
 import { getRepository } from "typeorm";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 
-import orphanagesView from '../views/orphanages_view';
+import orphanagesView from "../views/orphanages_view";
 import Orphanage from "../models/Orphanage";
 
 export default {
-  async index(request: Request, response: Response) {
+  async index(_: Request, response: Response) {
     const orphanagesRepository = getRepository(Orphanage);
-  
+
     const orphanages = await orphanagesRepository.find({
-      relations: ['images']
+      relations: ["images"],
     });
-  
+
     return response.json(orphanagesView.renderMany(orphanages));
   },
 
@@ -21,11 +21,15 @@ export default {
 
     const orphanagesRepository = getRepository(Orphanage);
 
-    const orphanage = await orphanagesRepository.findOneOrFail(id, {
-      relations: ['images']
-    });
-  
-    return response.json(orphanagesView.render(orphanage));
+    try {
+      const orphanage = await orphanagesRepository.findOneOrFail(id, {
+        relations: ["images"],
+      });
+
+      return response.json(orphanagesView.render(orphanage));
+    } catch (_) {
+      return response.status(404).json({ message: "Not found" });
+    }
   },
 
   async create(request: Request, response: Response) {
@@ -42,10 +46,10 @@ export default {
     const orphanagesRepository = getRepository(Orphanage);
     const requestImages = request.files as Express.Multer.File[];
 
-    const images = requestImages.map(image => {
+    const images = requestImages.map((image) => {
       return {
         path: image.filename,
-      }
+      };
     });
 
     const data = {
@@ -71,7 +75,9 @@ export default {
         Yup.object().shape({
           path: Yup.string().required(),
         })
-      ).required().min(1),
+      )
+        .required()
+        .min(1),
     });
 
     await schema.validate(data, {
@@ -79,10 +85,9 @@ export default {
     });
 
     const orphanage = orphanagesRepository.create(data);
-  
+
     await orphanagesRepository.save(orphanage);
-  
-    return response.status(201)
-      .json(orphanagesView.render(orphanage));
-  }
-}
+
+    return response.status(201).json(orphanagesView.render(orphanage));
+  },
+};
