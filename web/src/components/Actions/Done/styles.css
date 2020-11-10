@@ -1,0 +1,85 @@
+.container-delete {
+  display: flex;
+  flex-direction: row;
+
+  height: 100%;
+  width: 100%;
+
+  align-items: center;
+  justify-content: center;
+  background: #37c77f;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  flex-wrap: wrap-reverse;
+
+  z-index: 10;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  margin-right: 181px;
+
+  width: 400px;
+}
+
+.message-container > button {
+  background: #31b272;
+  border-radius: 20px;
+  opacity: 1;
+  border: 1px solid #31b272;
+}
+
+.title {
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 80px;
+  line-height: 80px;
+
+  /* identical to box height, or 100% */
+  text-align: center;
+
+  /* Texts / Botão */
+  color: #ffffff;
+}
+
+.subtitle {
+  margin-top: 20px;
+  font-family: Nunito;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 34px;
+
+  /* or 142% */
+  text-align: center;
+
+  /* Texts / Botão */
+  color: #ffffff;
+}
+
+.icon {
+  width: 399px;
+  height: 488px;
+}
+
+@media (max-width: 1024px) {
+  .message-container {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .icon {
+    width: 250x;
+    height: 250px;
+  }
+}
