@@ -9,13 +9,19 @@ type RoutePropsTemp = Omit<RouteProps, "component">;
 
 interface RouteWrapperProps extends RoutePropsTemp {
   isPrivate?: boolean;
+  isDashboard?: boolean;
   landing?: boolean;
   component: React.ElementType;
+}
+
+interface ElementProps extends React.FunctionComponent<any> {
+  isDashboard?: boolean;
 }
 
 export default function RouteWrapper({
   component: Component,
   isPrivate,
+  isDashboard,
   landing,
   ...rest
 }: RouteWrapperProps) {
@@ -29,13 +35,17 @@ export default function RouteWrapper({
     return <Redirect to="/dashboard" />;
   }
 
-  const Layout = landing ? React.Fragment : signed ? DefaultLayout : AuthLayout;
+  const Layout: ElementProps = landing
+    ? React.Fragment
+    : signed
+    ? DefaultLayout
+    : AuthLayout;
 
   return (
     <Route
       {...rest}
       render={(props) => (
-        <Layout>
+        <Layout isDashboard>
           <Component {...props} />
         </Layout>
       )}

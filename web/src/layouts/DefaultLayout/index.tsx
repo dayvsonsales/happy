@@ -1,9 +1,12 @@
 import React from "react";
+import Sidebar from "../../components/Sidebar";
 
-// import { Container } from './styles';
-
-const DefaultLayout: React.FC = () => {
-  return <div />;
+const DefaultLayout: React.FC<{ isDashboard: boolean }> = () => {
+  return (
+    <div>
+      <Sidebar isDashboard />
+    </div>
+  );
 };
 
 export default DefaultLayout;

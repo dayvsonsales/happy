@@ -24,7 +24,7 @@ export default function Routes() {
         <Route path="/login" component={Login} />
         <Route path="/request-reset" exact component={RequestReset} />
         <Route path="/reset-password" exact component={ResetPassword} />
-        <Route path="/dashboard" component={Dashboard} isPrivate />
+        <Route path="/dashboard" component={Dashboard} isPrivate isDashboard />
       </Switch>
     </BrowserRouter>
   );
