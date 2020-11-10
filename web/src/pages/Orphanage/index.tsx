@@ -1,24 +1,24 @@
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { FiClock, FiInfo } from "react-icons/fi";
-import { Marker, TileLayer } from "react-leaflet";
-import L from 'leaflet';
+import { Marker } from "react-leaflet";
+import L from "leaflet";
 
-import mapMarkerImg from '../../assets/images/map-marker.svg';
+import mapMarkerImg from "../../assets/images/map-marker.svg";
 
 import PrimaryButton from "../../components/PrimaryButton";
 import Sidebar from "../../components/Sidebar";
 import Map from "../../components/Map";
 
-import './styles.css';
+import "./styles.css";
 
 const happyMapIcon = L.icon({
   iconUrl: mapMarkerImg,
 
   iconSize: [58, 68],
   iconAnchor: [29, 68],
-  popupAnchor: [0, -60]
-})
+  popupAnchor: [0, -60],
+});
 
 export default function Orphanage() {
   return (
@@ -27,52 +27,82 @@ export default function Orphanage() {
 
       <main>
         <div className="orphanage-details">
-          <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
+          <img
+            src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg"
+            alt="Lar das meninas"
+          />
 
           <div className="images">
             <button className="active" type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
+              <img
+                src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg"
+                alt="Lar das meninas"
+              />
             </button>
             <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
+              <img
+                src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg"
+                alt="Lar das meninas"
+              />
             </button>
             <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
+              <img
+                src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg"
+                alt="Lar das meninas"
+              />
             </button>
             <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
+              <img
+                src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg"
+                alt="Lar das meninas"
+              />
             </button>
             <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
+              <img
+                src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg"
+                alt="Lar das meninas"
+              />
             </button>
             <button type="button">
-              <img src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg" alt="Lar das meninas" />
+              <img
+                src="https://www.gcd.com.br/wp-content/uploads/2020/08/safe_image.jpg"
+                alt="Lar das meninas"
+              />
             </button>
           </div>
-          
+
           <div className="orphanage-details-content">
             <h1>Lar das meninas</h1>
-            <p>Presta assistência a crianças de 06 a 15 anos que se encontre em situação de risco e/ou vulnerabilidade social.</p>
+            <p>
+              Presta assistência a crianças de 06 a 15 anos que se encontre em
+              situação de risco e/ou vulnerabilidade social.
+            </p>
 
             <div className="map-container">
-              <Map 
+              <Map
                 interactive={false}
-                center={[-27.2092052,-49.6401092]} 
-                zoom={16} 
-                style={{ width: '100%', height: 280 }}
+                center={[-27.2092052, -49.6401092]}
+                zoom={16}
+                style={{ width: "100%", height: 280 }}
               >
-                <Marker interactive={false} icon={happyMapIcon} position={[-27.2092052,-49.6401092]} />
+                <Marker
+                  interactive={false}
+                  icon={happyMapIcon}
+                  position={[-27.2092052, -49.6401092]}
+                />
               </Map>
 
               <footer>
-                <a href="">Ver rotas no Google Maps</a>
+                <a href="#google">Ver rotas no Google Maps</a>
               </footer>
             </div>
 
             <hr />
 
             <h2>Instruções para visita</h2>
-            <p>Venha como se sentir mais à vontade e traga muito amor para dar.</p>
+            <p>
+              Venha como se sentir mais à vontade e traga muito amor para dar.
+            </p>
 
             <div className="open-details">
               <div className="hour">
