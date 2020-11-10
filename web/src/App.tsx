@@ -1,10 +1,10 @@
-import React from 'react';
-import Routes from './routes';
+import React from "react";
+import Routes from "./routes";
 
-import { UserProvider } from './contexts/UserContext';
+import { UserProvider } from "./contexts/UserContext";
 
-import 'leaflet/dist/leaflet.css';
-import './styles/global.css';
+import "leaflet/dist/leaflet.css";
+import "./styles/global.css";
 
 export default function App() {
   return (
@@ -15,4 +15,3 @@ export default function App() {
     </div>
   );
 }
-
