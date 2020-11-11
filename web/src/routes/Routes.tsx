@@ -6,7 +6,6 @@ import AuthLayout from "../layouts/AuthLayout";
 import DefaultLayout from "../layouts/DefaultLayout";
 
 type RoutePropsTemp = Omit<RouteProps, "component">;
-
 interface RouteWrapperProps extends RoutePropsTemp {
   isPrivate?: boolean;
   isDashboard?: boolean;
@@ -25,7 +24,9 @@ export default function RouteWrapper({
   landing,
   ...rest
 }: RouteWrapperProps) {
-  const { user: signed } = useUserContext();
+  // const { user: signed } = useUserContext();
+
+  const signed = true;
 
   if (!signed && isPrivate) {
     return <Redirect to="/login" />;

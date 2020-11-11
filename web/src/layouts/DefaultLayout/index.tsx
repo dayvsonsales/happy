@@ -1,10 +1,14 @@
 import React from "react";
 import Sidebar from "../../components/Sidebar";
 
-const DefaultLayout: React.FC<{ isDashboard: boolean }> = () => {
+import "./styles.css";
+
+const DefaultLayout: React.FC<{ isDashboard: boolean }> = ({ children }) => {
   return (
-    <div>
+    <div className="container-default">
       <Sidebar isDashboard />
+
+      <div className="content">{children}</div>
     </div>
   );
 };

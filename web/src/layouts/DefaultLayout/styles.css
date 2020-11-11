@@ -1,0 +1,13 @@
+.container-default {
+  position: relative;
+  display: flex;
+}
+
+.sidebar {
+  position: relative;
+}
+
+.content {
+  flex: 1;
+  height: 100%;
+}

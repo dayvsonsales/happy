@@ -1,6 +1,6 @@
 import React from "react";
 import { FiArrowLeft } from "react-icons/fi";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import mapMarkerImg from "../../assets/images/map-marker.svg";
 import logoutIcon from "../../assets/images/logout.svg";
@@ -26,12 +26,12 @@ export default function Sidebar({ isDashboard }: SidebarProps) {
 
       {isDashboard && (
         <div className="group-button">
-          <button type="button" onClick={logout}>
-            <img src={readyIcon} alt="Logout" />
-          </button>
-          <button type="button" onClick={logout}>
-            <img src={pendingIcon} alt="Logout" />
-          </button>
+          <Link to="/dashboard?type=active">
+            <img src={readyIcon} alt="Active" />
+          </Link>
+          <Link to="/dashboard?type=pending">
+            <img src={pendingIcon} alt="Pending" />
+          </Link>
         </div>
       )}
 
