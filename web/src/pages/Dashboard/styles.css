@@ -57,6 +57,13 @@ hr {
   justify-content: center;
 }
 
+.no-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 223px;
+}
+
 @media (max-width: 600px) {
   .title-dashboard {
     font-size: 14px;

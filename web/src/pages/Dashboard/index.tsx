@@ -5,6 +5,8 @@ import Grid from "../../components/Grid";
 
 import "./styles.css";
 
+import noContentIcon from "../../assets/images/no-content.svg";
+
 interface DashboardParams extends URLSearchParams {
   type?: string;
 }
@@ -17,6 +19,8 @@ const Dashboard: React.FC = () => {
   const query = useQuery();
 
   const pending = query.get("type") === "pending";
+
+  const count = 0;
 
   return (
     <div className="wrapper-dashboard">
@@ -35,12 +39,18 @@ const Dashboard: React.FC = () => {
           )}
         </div>
         <hr />
-        <div className="grid-dashboard">
-          <Grid>
-            <Card />
-            <Card />
-          </Grid>
-        </div>
+        {count > 0 ? (
+          <div className="grid-dashboard">
+            <Grid>
+              <Card />
+              <Card />
+            </Grid>
+          </div>
+        ) : (
+          <div className="no-content">
+            <img src={noContentIcon} alt="No content" />
+          </div>
+        )}
       </div>
     </div>
   );
