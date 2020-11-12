@@ -8,6 +8,9 @@ import editIcon from "../../assets/images/edit.svg";
 import deleteIcon from "../../assets/images/delete.svg";
 
 import "./styles.css";
+import { Orphanage } from "../../models/Orphanage";
+
+import arrow from "../../assets/images/arrow.svg";
 
 const happyMapIcon = L.icon({
   iconUrl: mapMarkerImg,
@@ -17,20 +20,32 @@ const happyMapIcon = L.icon({
   popupAnchor: [170, 2],
 });
 
-const Card: React.FC = () => {
+const Card: React.FC<{ orphanage: Orphanage }> = ({ orphanage }) => {
   return (
     <div className="container-card">
       <div className="container-map">
-        <Map interactive={false}>
-          <Marker icon={happyMapIcon} position={[-27.2092052, -49.6401092]} />
+        <Map
+          interactive={false}
+          center={[orphanage.latitude, orphanage.longitude]}
+        >
+          <Marker
+            icon={happyMapIcon}
+            position={[orphanage.latitude, orphanage.longitude]}
+          />
         </Map>
       </div>
 
       <div className="card-information">
-        <p>Orf. Esperança</p>
+        <p>{orphanage.name}</p>
         <div>
-          <img src={editIcon} alt="Edit orphanage" />
-          <img src={deleteIcon} alt="Delete orphanage" />
+          {orphanage.pending ? (
+            <img id="arrow" src={arrow} alt="Show orphanage" />
+          ) : (
+            <>
+              <img src={editIcon} alt="Edit orphanage" />
+              <img src={deleteIcon} alt="Delete orphanage" />
+            </>
+          )}
         </div>
       </div>
     </div>

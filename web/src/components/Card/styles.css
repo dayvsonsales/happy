@@ -53,6 +53,15 @@
   -o-border-radius: 16px;
 }
 
+#arrow {
+  padding: 10px;
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+  -moz-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  -o-transform: rotate(180deg);
+}
+
 @media (max-width: 600px) {
   .container-map {
     width: 218px;

@@ -10,13 +10,11 @@ import pendingIcon from "../../assets/images/pending-locations-icon.svg";
 import "./styles.css";
 import { useUserContext } from "../../contexts/UserContext";
 
-type SidebarBase = Omit<React.ElementType, "component">;
-
-interface SidebarProps extends SidebarBase {
+interface SidebarProps {
   isDashboard?: boolean;
 }
 
-export default function Sidebar({ isDashboard }: SidebarProps) {
+const Sidebar: React.FC<SidebarProps> = ({ isDashboard }: SidebarProps) => {
   const { goBack } = useHistory();
   const { logout } = useUserContext();
 
@@ -48,4 +46,6 @@ export default function Sidebar({ isDashboard }: SidebarProps) {
       </footer>
     </aside>
   );
-}
+};
+
+export default Sidebar;

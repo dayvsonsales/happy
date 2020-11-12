@@ -1,26 +1,35 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Card from "../../components/Card";
 import Grid from "../../components/Grid";
 
-import "./styles.css";
+import useQuery from "../../hooks/useQuery";
 
 import noContentIcon from "../../assets/images/no-content.svg";
 
-interface DashboardParams extends URLSearchParams {
-  type?: string;
-}
-
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-};
+import "./styles.css";
+import api from "../../services/api";
+import { Orphanage } from "../../models/Orphanage";
 
 const Dashboard: React.FC = () => {
-  const query = useQuery();
+  const [orphanages, setOrphanages] = useState<Orphanage[]>();
 
+  const query = useQuery(useLocation().search);
   const pending = query.get("type") === "pending";
 
-  const count = 0;
+  const orphanagesCount = useMemo(() => {
+    return orphanages ? orphanages.length : 0;
+  }, [orphanages]);
+
+  useEffect(() => {
+    async function loadOrphanages() {
+      const { data } = await api.get(`/orphanages?pending=${pending}`);
+
+      setOrphanages(data);
+    }
+
+    loadOrphanages();
+  }, [pending]);
 
   return (
     <div className="wrapper-dashboard">
@@ -29,28 +38,31 @@ const Dashboard: React.FC = () => {
           {!pending ? (
             <>
               <p>Orfanatos Cadastrados</p>
-              <span>2 orfanatos</span>
             </>
           ) : (
             <>
               <p>Cadastros pendentes</p>
-              <span>2 orfanatos</span>
             </>
           )}
+          <span>{orphanagesCount} orfanatos</span>
         </div>
+
         <hr />
-        {count > 0 ? (
-          <div className="grid-dashboard">
-            <Grid>
-              <Card />
-              <Card />
-            </Grid>
-          </div>
-        ) : (
-          <div className="no-content">
-            <img src={noContentIcon} alt="No content" />
-          </div>
-        )}
+        <div className="item-container">
+          {orphanagesCount > 0 ? (
+            <div className="grid-dashboard">
+              <Grid>
+                {orphanages?.map((orphanage) => (
+                  <Card orphanage={orphanage} />
+                ))}
+              </Grid>
+            </div>
+          ) : (
+            <div className="no-content">
+              <img src={noContentIcon} alt="No content" />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

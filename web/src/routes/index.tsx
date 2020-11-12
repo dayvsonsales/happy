@@ -3,7 +3,7 @@ import { BrowserRouter, Switch } from "react-router-dom";
 
 import Route from "./Routes";
 
-import CreateOrphanage from "../pages/CreateOrphanage";
+import CreateOrEditOrphanage from "../pages/CreateOrEditOrphanage";
 import Landing from "../pages/Landing";
 import Orphanage from "../pages/Orphanage";
 import OrphanagesMap from "../pages/OrphanagesMap";
@@ -18,8 +18,19 @@ export default function Routes() {
       <Switch>
         <Route path="/" exact component={Landing} landing />
         <Route path="/app" component={OrphanagesMap} landing />
-        <Route path="/orphanages/create" component={CreateOrphanage} landing />
-        <Route path="/orphanages/:id" component={Orphanage} landing />
+        <Route
+          path="/orphanages/create"
+          component={CreateOrEditOrphanage}
+          landing
+        />
+        <Route
+          exact
+          path="/orphanages/edit/:id"
+          component={CreateOrEditOrphanage}
+          isPrivate
+          landing
+        />
+        <Route exact path="/orphanages/:id" component={Orphanage} landing />
 
         <Route path="/login" component={Login} />
         <Route path="/request-reset" exact component={RequestReset} />

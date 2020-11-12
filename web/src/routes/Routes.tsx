@@ -36,20 +36,22 @@ export default function RouteWrapper({
     return <Redirect to="/dashboard" />;
   }
 
-  const Layout: ElementProps = landing
-    ? React.Fragment
-    : signed
-    ? DefaultLayout
-    : AuthLayout;
+  const Layout: ElementProps = signed ? DefaultLayout : AuthLayout;
 
   return (
     <Route
       {...rest}
-      render={(props) => (
-        <Layout isDashboard>
-          <Component {...props} />
-        </Layout>
-      )}
+      render={(props) =>
+        landing ? (
+          <>
+            <Component {...props} />
+          </>
+        ) : (
+          <Layout isDashboard>
+            <Component {...props} />
+          </Layout>
+        )
+      }
     />
   );
 }
