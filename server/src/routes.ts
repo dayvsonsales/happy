@@ -17,7 +17,7 @@ routes.post("/login", LoginController.create);
 routes.post("/reset", ResetPasswordController.create);
 routes.post("/reset-password/:token", UsersController.update);
 
-routes.use(AuthMiddleware);
+// routes.use(AuthMiddleware);
 
 routes.get("/users", UsersController.index);
 routes.get("/orphanages", OrphanagesController.index);

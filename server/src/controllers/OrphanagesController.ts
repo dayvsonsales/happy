@@ -6,11 +6,16 @@ import orphanagesView from "../views/orphanages_view";
 import Orphanage from "../models/Orphanage";
 
 export default {
-  async index(_: Request, response: Response) {
+  async index(request: Request, response: Response) {
     const orphanagesRepository = getRepository(Orphanage);
+
+    const { pending } = request.query;
 
     const orphanages = await orphanagesRepository.find({
       relations: ["images"],
+      where: {
+        pending: pending === "true",
+      },
     });
 
     return response.json(orphanagesView.renderMany(orphanages));
@@ -70,7 +75,7 @@ export default {
       about: Yup.string().required().max(300),
       instructions: Yup.string().required(),
       opening_hours: Yup.string().required(),
-      open_on_weekends: Yup.boolean(),
+      open_on_weekends: Yup.boolean().required(),
       images: Yup.array(
         Yup.object().shape({
           path: Yup.string().required(),
