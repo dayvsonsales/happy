@@ -1,3 +1,5 @@
+import { Image } from "./Image";
+
 export interface Orphanage {
   id: number;
   name: string;
@@ -6,5 +8,7 @@ export interface Orphanage {
   about: string;
   instructions: string;
   open_on_weekends: boolean;
+  opening_hours: string;
   pending?: boolean;
+  images?: Image[];
 }

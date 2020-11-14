@@ -16,6 +16,7 @@ export default function Map({
   doubleClickZoom = true,
   touchZoom = true,
   zoom = 15,
+  zoomControl = false,
   ...props
 }: MapProps) {
   return (
@@ -25,7 +26,7 @@ export default function Map({
       style={{ width: "100%", height: "100%" }}
       dragging={interactive}
       touchZoom={touchZoom}
-      zoomControl={false}
+      zoomControl={zoomControl}
       scrollWheelZoom={interactive}
       doubleClickZoom={doubleClickZoom}
       {...props}
