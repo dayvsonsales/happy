@@ -128,3 +128,11 @@ form.create-orphanage-form .input-block .button-select button:last-child {
   border-radius: 0 20px 20px 0;
   border-left: 0;
 }
+
+.search-custom-style {
+  --close-button-max-size: 0px;
+}
+
+.search-control-close-button {
+  display: none !important;
+}

@@ -11,7 +11,12 @@ import Map from "../../components/Map";
 import happyMapIcon from "../../components/Map/happMapIcon";
 import { useParams } from "react-router-dom";
 import api from "../../services/api";
-import { LeafletEvent, LeafletMouseEvent, ZoomAnimEvent } from "leaflet";
+import {
+  LeafletEvent,
+  LeafletMouseEvent,
+} from "leaflet";
+
+import ReactLeafletSearch from "react-leaflet-search";
 
 interface OrphanageParams {
   id?: string | undefined;
@@ -94,6 +99,17 @@ export default function CreateOrEditOrphanage() {
                   icon={happyMapIcon}
                   position={[latitude, longitude]}
                 />
+                <ReactLeafletSearch
+                  position="topleft"
+                  inputPlaceholder="Search a location"
+                  showMarker={false}
+                  zoom={15}
+                  closeResultsOnClick={true}
+                  openSearchOnLoad={false}
+                  className="search-custom-style"
+                >
+                  {(info) => <></>}
+                </ReactLeafletSearch>
               </Map>
 
               <div className="input-block">
