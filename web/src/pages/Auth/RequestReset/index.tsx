@@ -35,7 +35,13 @@ const RequestReset: React.FC = () => {
       <form onSubmit={handleSubmit}>
         <div className="form-auth">
           <label>E-mail</label>
-          <input required type="email" name="email" />
+          <input
+            required
+            type="email"
+            name="email"
+            value={email}
+            onChange={() => setEmail}
+          />
           {error && <div className="error">Erro ao solicitar!</div>}
           {success && (
             <div className="success">
