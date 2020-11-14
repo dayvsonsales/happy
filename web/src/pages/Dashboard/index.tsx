@@ -3,13 +3,14 @@ import { useLocation } from "react-router-dom";
 import Card from "../../components/Card";
 import Grid from "../../components/Grid";
 
-import useQuery from "../../hooks/useQuery";
+import { Orphanage } from "../../models/Orphanage";
 
+import useQuery from "../../hooks/useQuery";
 import noContentIcon from "../../assets/images/no-content.svg";
 
-import "./styles.css";
 import api from "../../services/api";
-import { Orphanage } from "../../models/Orphanage";
+
+import "./styles.css";
 
 const Dashboard: React.FC = () => {
   const [orphanages, setOrphanages] = useState<Orphanage[]>();
