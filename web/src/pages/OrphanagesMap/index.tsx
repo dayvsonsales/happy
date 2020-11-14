@@ -7,11 +7,12 @@ import { FiArrowRight, FiPlus } from "react-icons/fi";
 import mapMarkerImg from "../../assets/images/map-marker.svg";
 import Map from "../../components/Map";
 
-import "./styles.css";
 import api from "../../services/api";
 import { Orphanage } from "../../models/Orphanage";
 
 import ReactLeafletSearch from "react-leaflet-search";
+
+import "./styles.css";
 
 const happyMapIcon = L.icon({
   iconUrl: mapMarkerImg,
@@ -22,6 +23,8 @@ const happyMapIcon = L.icon({
 
 export default function OrphanagesMap() {
   const [orphanages, setOrphanages] = useState([] as Orphanage[]);
+  const [latitude, setLatitude] = useState(-27.2092052);
+  const [longitude, setLongitude] = useState(-49.6401092);
 
   useEffect(() => {
     async function loadOrphanages() {
@@ -31,6 +34,11 @@ export default function OrphanagesMap() {
     }
 
     loadOrphanages();
+
+    navigator.geolocation.getCurrentPosition((position) => {
+      setLatitude(position.coords.latitude);
+      setLongitude(position.coords.longitude);
+    });
   }, []);
 
   return (
@@ -49,7 +57,7 @@ export default function OrphanagesMap() {
         </footer>
       </aside>
 
-      <Map boxZoom={true} zoomControl={true}>
+      <Map center={[latitude, longitude]} boxZoom={true} zoomControl={true}>
         <ReactLeafletSearch
           position="topleft"
           inputPlaceholder="Search a location"
