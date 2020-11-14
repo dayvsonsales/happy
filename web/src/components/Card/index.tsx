@@ -1,4 +1,4 @@
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "react-leaflet";
 import React from "react";
 import Map from "../Map";
 import L from "leaflet";
