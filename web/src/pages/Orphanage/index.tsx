@@ -46,7 +46,7 @@ export default function ViewOrphanage() {
     }
 
     loadOrphanage();
-  }, []);
+  }, [id]);
 
   return (
     <div id="page-orphanage">
