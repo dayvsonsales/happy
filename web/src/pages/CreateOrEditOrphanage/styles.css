@@ -136,3 +136,22 @@ form.create-orphanage-form .input-block .button-select button:last-child {
 .search-control-close-button {
   display: none !important;
 }
+
+.uploaded-image {
+  display: flex;
+  flex-direction: row;
+  width: 70vh;
+  overflow: scroll;
+  margin-top: 20px;
+}
+
+.uploaded-image img {
+  max-width: 128px;
+  max-height: 128px;
+  min-width: 128px;
+  min-height: 128px;
+  border-radius: 20px;
+  object-fit: cover;
+  margin-right: 2.5px;
+  margin-left: 2.5px;
+}

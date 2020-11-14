@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Marker } from "react-leaflet";
 
 import PrimaryButton from "../../components/PrimaryButton";
 import Sidebar from "../../components/Sidebar";
 
-import "./styles.css";
-
 import { FiPlus } from "react-icons/fi";
 import Map from "../../components/Map";
 import happyMapIcon from "../../components/Map/happMapIcon";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import api from "../../services/api";
-import {
-  LeafletEvent,
-  LeafletMouseEvent,
-} from "leaflet";
+import { LeafletEvent, LeafletMouseEvent } from "leaflet";
 
 import ReactLeafletSearch from "react-leaflet-search";
+import Done from "../../components/Actions/Done";
+import { Image } from "../../models/Image";
+
+import "./styles.css";
 
 interface OrphanageParams {
   id?: string | undefined;
@@ -26,6 +25,8 @@ const DEFAULT_LATITUDE = -27.2092052;
 const DEFAULT_LONGITUDE = -49.6401092;
 
 export default function CreateOrEditOrphanage() {
+  const history = useHistory();
+
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -34,6 +35,12 @@ export default function CreateOrEditOrphanage() {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [zoom, setZoom] = useState(15);
+  const [showAlertSuccess, setShowAlertSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [selectedImages, setSelectedImages] = useState<Image[]>([] as Image[]);
+
+  const [error, setError] = useState<boolean>(false);
 
   const { id } = useParams<OrphanageParams>();
 
@@ -45,6 +52,89 @@ export default function CreateOrEditOrphanage() {
 
   function handleZoom(e: LeafletEvent) {
     setZoom(e.target._zoom);
+  }
+
+  async function create() {
+    setLoading(true);
+    try {
+      await api.post("/orphanages", getData());
+
+      setShowAlertSuccess(true);
+    } catch (e) {
+      setError(true);
+      setLoading(false);
+    }
+  }
+
+  async function edit() {
+    setLoading(true);
+    try {
+      await api.post(`/orphanages/edit/${id}`, getData());
+
+      setShowAlertSuccess(true);
+    } catch (e) {
+      setError(true);
+      setLoading(false);
+    }
+  }
+
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault();
+
+    setError(false);
+    setLoading(false);
+
+    if (!id) {
+      create();
+    } else {
+      edit();
+    }
+  }
+
+  function handleFile(inputFiles: any) {
+    const files = Array.from(inputFiles);
+
+    Promise.all(
+      files.map((file: any) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+
+          reader.onload = (event: any) => {
+            const __file: Image = {
+              path: event.target.result,
+            };
+
+            resolve(__file);
+          };
+          reader.readAsDataURL(file);
+        });
+      })
+    ).then((images) => {
+      setSelectedImages(images as Image[]);
+    });
+  }
+
+  function showInputFile() {
+    document.getElementById("file")?.click();
+  }
+
+  function getData() {
+    const formData = new FormData();
+    const files = document.getElementById("file") as any;
+
+    formData.append("name", name);
+    formData.append("about", about);
+    formData.append("instructions", instructions);
+    formData.append("opening_hours", opening_hours);
+    formData.append("open_on_weekends", open_on_weekends.toString());
+    formData.append("latitude", latitude.toString());
+    formData.append("longitude", longitude.toString());
+
+    for (let i = 0; i < files.files.length; i++) {
+      formData.append("files", files.files[i]);
+    }
+
+    return formData;
   }
 
   useEffect(() => {
@@ -68,15 +158,30 @@ export default function CreateOrEditOrphanage() {
         setLongitude(position.coords.longitude);
       });
     }
-  }, []);
+  }, [id]);
 
   return (
     <div id="page-create-orphanage">
       <Sidebar />
+      {showAlertSuccess && !id && (
+        <Done
+          alertMessage="O orfanato foi editado com sucesso!"
+          alertButtonMessage="Voltar"
+          callback={() => setShowAlertSuccess(false)}
+        />
+      )}
 
+      {showAlertSuccess && (
+        <Done
+          alertMessage="O cadastro deu certo e foi enviado ao administrador para
+          ser aprovado. Agora é só esperar :)"
+          alertButtonMessage="Voltar para o mapa"
+          callback={() => history.push("/app")}
+        />
+      )}
       <main>
         <div className="wrapper-form">
-          <form className="create-orphanage-form">
+          <form className="create-orphanage-form" onSubmit={handleSubmit}>
             <fieldset>
               <legend>Dados</legend>
 
@@ -113,20 +218,31 @@ export default function CreateOrEditOrphanage() {
               </Map>
 
               <div className="input-block">
-                <label htmlFor="name">Nome</label>
+                <label htmlFor="name">
+                  Nome
+                  <span>Mínimo 8 caracteres e máximo de 128 caracteres</span>
+                </label>
                 <input
+                  required
                   id="name"
                   value={name}
+                  minLength={8}
+                  maxLength={128}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
 
               <div className="input-block">
                 <label htmlFor="about">
-                  Sobre <span>Máximo de 300 caracteres</span>
+                  Sobre
+                  <span>
+                    Mínimo de 30 caracteres e máximo de 300 caracteres
+                  </span>
                 </label>
                 <textarea
+                  required
                   id="about"
+                  minLength={30}
                   maxLength={300}
                   value={about}
                   onChange={(e) => setAbout(e.target.value)}
@@ -136,9 +252,32 @@ export default function CreateOrEditOrphanage() {
               <div className="input-block">
                 <label htmlFor="images">Fotos</label>
 
-                <div className="uploaded-image"></div>
+                <div className="uploaded-image">
+                  {selectedImages.map((image) => (
+                    <img
+                      width="128"
+                      height="128"
+                      key={image.path}
+                      alt="Orphanage"
+                      src={image.path}
+                    />
+                  ))}
+                </div>
 
-                <button className="new-image">
+                <button
+                  type="button"
+                  onClick={showInputFile}
+                  className="new-image"
+                >
+                  <input
+                    id="file"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    name="files"
+                    style={{ display: "none" }}
+                    onChange={(e) => handleFile(e.target.files)}
+                  />
                   <FiPlus size={24} color="#15b6d6" />
                 </button>
               </div>
@@ -148,19 +287,32 @@ export default function CreateOrEditOrphanage() {
               <legend>Visitação</legend>
 
               <div className="input-block">
-                <label htmlFor="instructions">Instruções</label>
+                <label htmlFor="instructions">
+                  Instruções
+                  <span>
+                    Mínimo de 30 caracteres e máximo de 300 caracteres
+                  </span>
+                </label>
                 <textarea
+                  required
                   id="instructions"
                   value={instructions}
+                  minLength={30}
+                  maxLength={300}
                   onChange={(e) => setInstructions(e.target.value)}
                 />
               </div>
 
               <div className="input-block">
-                <label htmlFor="opening_hours">Horário das visitas</label>
+                <label htmlFor="opening_hours">
+                  Horário das visitas
+                  <span>Formato livre. Até 256 caracteres</span>
+                </label>
                 <input
+                  required
                   id="opening_hours"
                   value={opening_hours}
+                  maxLength={256}
                   onChange={(e) => setOpeningHours(e.target.value)}
                 />
               </div>
@@ -186,8 +338,18 @@ export default function CreateOrEditOrphanage() {
                 </div>
               </div>
             </fieldset>
-
-            <PrimaryButton type="submit">Confirmar</PrimaryButton>
+            {error && (
+              <div className="error">
+                Aconteceu um erro ao cadastrar/editar orfanato.
+              </div>
+            )}
+            {!loading ? (
+              <PrimaryButton type="submit">Confirmar</PrimaryButton>
+            ) : (
+              <PrimaryButton type="submit" disabled>
+                Aguarde...
+              </PrimaryButton>
+            )}
           </form>
         </div>
       </main>

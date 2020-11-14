@@ -1,7 +1,7 @@
 import { Orphanage } from "./Orphanage";
 
 export interface Image {
-  id: number;
+  id?: number;
   path: string;
-  orphanage: Orphanage;
+  orphanage?: Orphanage;
 }
