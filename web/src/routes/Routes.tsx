@@ -24,9 +24,7 @@ export default function RouteWrapper({
   landing,
   ...rest
 }: RouteWrapperProps) {
-  // const { user: signed } = useUserContext();
-
-  const signed = true;
+  const { user: signed } = useUserContext();
 
   if (!signed && isPrivate) {
     return <Redirect to="/login" />;
