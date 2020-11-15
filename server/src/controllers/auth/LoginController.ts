@@ -37,7 +37,9 @@ export default {
           key
         );
 
-        return response.status(200).json({ token });
+        return response
+          .status(200)
+          .json({ token, email, name: user.name, id: user.id });
       } else {
         throw new Error();
       }
