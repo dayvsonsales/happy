@@ -92,7 +92,6 @@ export default {
         return response.status(404).json({ message: "User not found" });
       }
     } catch (e) {
-      console.log(e);
       return response
         .status(400)
         .json({ message: "You can't reset password." });
