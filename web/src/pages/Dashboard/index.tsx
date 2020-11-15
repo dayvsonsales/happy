@@ -54,7 +54,7 @@ const Dashboard: React.FC = () => {
             <div className="grid-dashboard">
               <Grid>
                 {orphanages?.map((orphanage) => (
-                  <Card orphanage={orphanage} />
+                  <Card key={orphanage.id} orphanage={orphanage} />
                 ))}
               </Grid>
             </div>
