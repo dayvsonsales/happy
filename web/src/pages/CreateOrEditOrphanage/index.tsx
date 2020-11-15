@@ -15,6 +15,8 @@ import ReactLeafletSearch from "react-leaflet-search";
 import Done from "../../components/Actions/Done";
 import { Image } from "../../models/Image";
 
+import noContent from "../../assets/images/no-content.svg";
+
 import "./styles.css";
 
 interface OrphanageParams {
@@ -41,6 +43,7 @@ export default function CreateOrEditOrphanage() {
   const [selectedImages, setSelectedImages] = useState<Image[]>([] as Image[]);
 
   const [error, setError] = useState<boolean>(false);
+  const [notFound, setNotFound] = useState<boolean>(true);
 
   const { id } = useParams<OrphanageParams>();
 
@@ -139,15 +142,20 @@ export default function CreateOrEditOrphanage() {
 
   useEffect(() => {
     async function loadOrphanage() {
-      const { data } = await api.get(`/orphanages/${id}`);
+      try {
+        const { data } = await api.get(`/orphanages/${id}`);
 
-      setName(data.name);
-      setAbout(data.about);
-      setInstructions(data.instructions);
-      setOpeningHours(data.opening_hours);
-      setLatitude(data.latitude);
-      setLongitude(data.longitude);
-      setOpenOnWeekends(data.open_on_weekends);
+        setName(data.name);
+        setAbout(data.about);
+        setInstructions(data.instructions);
+        setOpeningHours(data.opening_hours);
+        setLatitude(data.latitude);
+        setLongitude(data.longitude);
+        setOpenOnWeekends(data.open_on_weekends);
+        setNotFound(false);
+      } catch (_) {
+        setNotFound(true);
+      }
     }
 
     if (id) {
@@ -171,188 +179,211 @@ export default function CreateOrEditOrphanage() {
         />
       )}
 
-      {showAlertSuccess && (
-        <Done
-          alertMessage="O cadastro deu certo e foi enviado ao administrador para
+      {notFound ? (
+        <main>
+          <div className="wrapper-form">
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "100px",
+              }}
+            >
+              <img src={noContent} alt="No content" />
+            </div>
+          </div>
+        </main>
+      ) : (
+        <>
+          {showAlertSuccess && (
+            <Done
+              alertMessage="O cadastro deu certo e foi enviado ao administrador para
           ser aprovado. Agora é só esperar :)"
-          alertButtonMessage="Voltar para o mapa"
-          callback={() => history.push("/app")}
-        />
-      )}
-      <main>
-        <div className="wrapper-form">
-          <form className="create-orphanage-form" onSubmit={handleSubmit}>
-            <fieldset>
-              <legend>Dados</legend>
+              alertButtonMessage="Voltar para o mapa"
+              callback={() => history.push("/app")}
+            />
+          )}
+          <main>
+            <div className="wrapper-form">
+              <form className="create-orphanage-form" onSubmit={handleSubmit}>
+                <fieldset>
+                  <legend>Dados</legend>
 
-              <Map
-                interactive={true}
-                doubleClickZoom={false}
-                touchZoom={false}
-                style={{ width: "100%", height: 280 }}
-                center={
-                  latitude && longitude
-                    ? [latitude, longitude]
-                    : [DEFAULT_LATITUDE, DEFAULT_LONGITUDE]
-                }
-                zoom={zoom}
-                onclick={(e) => moveMaker(e)}
-                onzoomend={(e) => handleZoom(e)}
-              >
-                <Marker
-                  interactive={false}
-                  icon={happyMapIcon}
-                  position={[latitude, longitude]}
-                />
-                <ReactLeafletSearch
-                  position="topleft"
-                  inputPlaceholder="Search a location"
-                  showMarker={false}
-                  zoom={15}
-                  closeResultsOnClick={true}
-                  openSearchOnLoad={false}
-                  className="search-custom-style"
-                >
-                  {(info) => <></>}
-                </ReactLeafletSearch>
-              </Map>
-
-              <div className="input-block">
-                <label htmlFor="name">
-                  Nome
-                  <span>Mínimo 8 caracteres e máximo de 128 caracteres</span>
-                </label>
-                <input
-                  required
-                  id="name"
-                  value={name}
-                  minLength={8}
-                  maxLength={128}
-                  onChange={(e) => setName(e.target.value)}
-                />
-              </div>
-
-              <div className="input-block">
-                <label htmlFor="about">
-                  Sobre
-                  <span>
-                    Mínimo de 30 caracteres e máximo de 300 caracteres
-                  </span>
-                </label>
-                <textarea
-                  required
-                  id="about"
-                  minLength={30}
-                  maxLength={300}
-                  value={about}
-                  onChange={(e) => setAbout(e.target.value)}
-                />
-              </div>
-
-              <div className="input-block">
-                <label htmlFor="images">Fotos</label>
-
-                <div className="uploaded-image">
-                  {selectedImages.map((image) => (
-                    <img
-                      width="128"
-                      height="128"
-                      key={image.path}
-                      alt="Orphanage"
-                      src={image.path}
+                  <Map
+                    interactive={true}
+                    doubleClickZoom={false}
+                    touchZoom={false}
+                    style={{ width: "100%", height: 280 }}
+                    center={
+                      latitude && longitude
+                        ? [latitude, longitude]
+                        : [DEFAULT_LATITUDE, DEFAULT_LONGITUDE]
+                    }
+                    zoom={zoom}
+                    onclick={(e) => moveMaker(e)}
+                    onzoomend={(e) => handleZoom(e)}
+                  >
+                    <Marker
+                      interactive={false}
+                      icon={happyMapIcon}
+                      position={[latitude, longitude]}
                     />
-                  ))}
-                </div>
+                    <ReactLeafletSearch
+                      position="topleft"
+                      inputPlaceholder="Search a location"
+                      showMarker={false}
+                      zoom={15}
+                      closeResultsOnClick={true}
+                      openSearchOnLoad={false}
+                      className="search-custom-style"
+                    >
+                      {(info) => <></>}
+                    </ReactLeafletSearch>
+                  </Map>
 
-                <button
-                  type="button"
-                  onClick={showInputFile}
-                  className="new-image"
-                >
-                  <input
-                    id="file"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    name="files"
-                    style={{ display: "none" }}
-                    onChange={(e) => handleFile(e.target.files)}
-                  />
-                  <FiPlus size={24} color="#15b6d6" />
-                </button>
-              </div>
-            </fieldset>
+                  <div className="input-block">
+                    <label htmlFor="name">
+                      Nome
+                      <span>
+                        Mínimo 8 caracteres e máximo de 128 caracteres
+                      </span>
+                    </label>
+                    <input
+                      required
+                      id="name"
+                      value={name}
+                      minLength={8}
+                      maxLength={128}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
 
-            <fieldset>
-              <legend>Visitação</legend>
+                  <div className="input-block">
+                    <label htmlFor="about">
+                      Sobre
+                      <span>
+                        Mínimo de 30 caracteres e máximo de 300 caracteres
+                      </span>
+                    </label>
+                    <textarea
+                      required
+                      id="about"
+                      minLength={30}
+                      maxLength={300}
+                      value={about}
+                      onChange={(e) => setAbout(e.target.value)}
+                    />
+                  </div>
 
-              <div className="input-block">
-                <label htmlFor="instructions">
-                  Instruções
-                  <span>
-                    Mínimo de 30 caracteres e máximo de 300 caracteres
-                  </span>
-                </label>
-                <textarea
-                  required
-                  id="instructions"
-                  value={instructions}
-                  minLength={30}
-                  maxLength={300}
-                  onChange={(e) => setInstructions(e.target.value)}
-                />
-              </div>
+                  <div className="input-block">
+                    <label htmlFor="images">Fotos</label>
 
-              <div className="input-block">
-                <label htmlFor="opening_hours">
-                  Horário das visitas
-                  <span>Formato livre. Até 256 caracteres</span>
-                </label>
-                <input
-                  required
-                  id="opening_hours"
-                  value={opening_hours}
-                  maxLength={256}
-                  onChange={(e) => setOpeningHours(e.target.value)}
-                />
-              </div>
+                    <div className="uploaded-image">
+                      {selectedImages.map((image) => (
+                        <img
+                          width="128"
+                          height="128"
+                          key={image.path}
+                          alt="Orphanage"
+                          src={image.path}
+                        />
+                      ))}
+                    </div>
 
-              <div className="input-block">
-                <label htmlFor="open_on_weekends">Atende fim de semana</label>
+                    <button
+                      type="button"
+                      onClick={showInputFile}
+                      className="new-image"
+                    >
+                      <input
+                        id="file"
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        name="files"
+                        style={{ display: "none" }}
+                        onChange={(e) => handleFile(e.target.files)}
+                      />
+                      <FiPlus size={24} color="#15b6d6" />
+                    </button>
+                  </div>
+                </fieldset>
 
-                <div className="button-select">
-                  <button
-                    type="button"
-                    className={open_on_weekends ? "active" : ""}
-                    onClick={() => setOpenOnWeekends(true)}
-                  >
-                    Sim
-                  </button>
-                  <button
-                    type="button"
-                    className={!open_on_weekends ? "active" : ""}
-                    onClick={() => setOpenOnWeekends(false)}
-                  >
-                    Não
-                  </button>
-                </div>
-              </div>
-            </fieldset>
-            {error && (
-              <div className="error">
-                Aconteceu um erro ao cadastrar/editar orfanato.
-              </div>
-            )}
-            {!loading ? (
-              <PrimaryButton type="submit">Confirmar</PrimaryButton>
-            ) : (
-              <PrimaryButton type="submit" disabled>
-                Aguarde...
-              </PrimaryButton>
-            )}
-          </form>
-        </div>
-      </main>
+                <fieldset>
+                  <legend>Visitação</legend>
+
+                  <div className="input-block">
+                    <label htmlFor="instructions">
+                      Instruções
+                      <span>
+                        Mínimo de 30 caracteres e máximo de 300 caracteres
+                      </span>
+                    </label>
+                    <textarea
+                      required
+                      id="instructions"
+                      value={instructions}
+                      minLength={30}
+                      maxLength={300}
+                      onChange={(e) => setInstructions(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="input-block">
+                    <label htmlFor="opening_hours">
+                      Horário das visitas
+                      <span>Formato livre. Até 256 caracteres</span>
+                    </label>
+                    <input
+                      required
+                      id="opening_hours"
+                      value={opening_hours}
+                      maxLength={256}
+                      onChange={(e) => setOpeningHours(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="input-block">
+                    <label htmlFor="open_on_weekends">
+                      Atende fim de semana
+                    </label>
+
+                    <div className="button-select">
+                      <button
+                        type="button"
+                        className={open_on_weekends ? "active" : ""}
+                        onClick={() => setOpenOnWeekends(true)}
+                      >
+                        Sim
+                      </button>
+                      <button
+                        type="button"
+                        className={!open_on_weekends ? "active" : ""}
+                        onClick={() => setOpenOnWeekends(false)}
+                      >
+                        Não
+                      </button>
+                    </div>
+                  </div>
+                </fieldset>
+                {error && (
+                  <div className="error">
+                    Aconteceu um erro ao cadastrar/editar orfanato.
+                  </div>
+                )}
+                {!loading ? (
+                  <PrimaryButton type="submit">Confirmar</PrimaryButton>
+                ) : (
+                  <PrimaryButton type="submit" disabled>
+                    Aguarde...
+                  </PrimaryButton>
+                )}
+              </form>
+            </div>
+          </main>
+        </>
+      )}
     </div>
   );
 }
