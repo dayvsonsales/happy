@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isDashboard }: SidebarProps) => {
-  const { goBack } = useHistory();
+  const { push } = useHistory();
   const { logout } = useUserContext();
 
   return (
@@ -39,7 +39,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDashboard }: SidebarProps) => {
             <img src={logoutIcon} alt="Logout" />
           </button>
         ) : (
-          <button type="button" onClick={goBack}>
+          <button type="button" onClick={() => push("/dashboard")}>
             <FiArrowLeft size={24} color="#FFF" />
           </button>
         )}

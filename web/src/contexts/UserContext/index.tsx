@@ -25,17 +25,29 @@ interface UserContextData {
 const UserContext = createContext<UserContextData>({} as UserContextData);
 
 export const UserProvider: React.FC = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const _user = localStorage.getItem("user") || sessionStorage.getItem("user");
+  const parsedUser = JSON.parse(_user as string) as User;
+  const [user, setUser] = useState<User | null>(parsedUser || null);
+
+  if (parsedUser) {
+    const { token } = parsedUser;
+    api.defaults.headers.Authorization = `Bearer ${token}`;
+  }
 
   async function login({ email, password, remember }: Omit<User, "name">) {
     try {
       const { data: user } = await api.post("/login", { email, password });
 
-      setUser(user);
+      const { token } = user;
+      api.defaults.headers.Authorization = `Bearer ${token}`;
 
       if (remember) {
         localStorage.setItem("user", JSON.stringify(user));
+      } else {
+        sessionStorage.setItem("user", JSON.stringify(user));
       }
+
+      setUser(user);
     } catch (e) {
       throw new Error("Email or password is invalid");
     }
@@ -69,6 +81,8 @@ export const UserProvider: React.FC = ({ children }) => {
 
   async function logout() {
     setUser(null);
+    localStorage.removeItem("user");
+    sessionStorage.removeItem("user");
   }
 
   return (

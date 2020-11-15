@@ -1,9 +1,9 @@
 import React, { FormEvent, useState } from "react";
 
-import "../styles.css";
-
 import { useUserContext } from "../../../contexts/UserContext";
 import { Link } from "react-router-dom";
+
+import "../styles.css";
 
 const Login: React.FC = () => {
   const { login } = useUserContext();
