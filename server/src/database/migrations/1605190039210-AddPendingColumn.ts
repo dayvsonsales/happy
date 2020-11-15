@@ -7,7 +7,6 @@ export class AddPendingColumn1605190039210 implements MigrationInterface {
       new TableColumn({
         name: "pending",
         type: "boolean",
-        isNullable: true,
         default: true,
       })
     );
