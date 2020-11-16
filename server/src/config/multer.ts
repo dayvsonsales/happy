@@ -1,21 +1,22 @@
-import multer, { Options } from 'multer';
-import path from 'path';
+import { encodeBase64 } from "bcryptjs";
+import multer, { Options } from "multer";
+import path from "path";
 
 export default {
   storage: multer.diskStorage({
-    destination: path.join(__dirname, '..', '..', 'uploads'),
+    destination: path.join(__dirname, "..", "..", "uploads"),
     filename: (req, file, cb) => {
-      cb(null, `${Date.now()}-${file.originalname}`);
+      cb(
+        null,
+        `${Date.now()}-${Buffer.from(file.originalname).toString("base64")}`
+      );
     },
   }),
   limits: {
     fileSize: 4 * 1024 * 1024, // 4MB
   },
   fileFilter: (req, file, cb) => {
-    const mimeTypes = [
-      'image/jpeg',
-      'image/png'
-    ];
+    const mimeTypes = ["image/jpeg", "image/png"];
 
     if (!mimeTypes.includes(file.mimetype)) {
       return cb(null, false);
