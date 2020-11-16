@@ -7,10 +7,12 @@ import mapMarkerImg from "../../assets/images/map-marker.svg";
 import editIcon from "../../assets/images/edit.svg";
 import deleteIcon from "../../assets/images/delete.svg";
 
-import "./styles.css";
 import { Orphanage } from "../../models/Orphanage";
 
 import arrow from "../../assets/images/arrow.svg";
+
+import "./styles.css";
+import { useHistory } from "react-router-dom";
 
 const happyMapIcon = L.icon({
   iconUrl: mapMarkerImg,
@@ -21,6 +23,8 @@ const happyMapIcon = L.icon({
 });
 
 const Card: React.FC<{ orphanage: Orphanage }> = ({ orphanage }) => {
+  const history = useHistory();
+
   return (
     <div className="container-card">
       <div className="container-map">
@@ -42,7 +46,11 @@ const Card: React.FC<{ orphanage: Orphanage }> = ({ orphanage }) => {
             <img id="arrow" src={arrow} alt="Show orphanage" />
           ) : (
             <>
-              <img src={editIcon} alt="Edit orphanage" />
+              <img
+                src={editIcon}
+                alt="Edit orphanage"
+                onClick={() => history.push(`/orphanages/edit/${orphanage.id}`)}
+              />
               <img src={deleteIcon} alt="Delete orphanage" />
             </>
           )}
