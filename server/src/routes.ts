@@ -23,5 +23,10 @@ routes.use(AuthMiddleware);
 routes.get("/users", UsersController.index);
 routes.get("/orphanages", OrphanagesController.index);
 routes.get("/orphanages/:id", OrphanagesController.show);
+routes.put(
+  "/orphanages/edit/:id",
+  upload.array("files"),
+  OrphanagesController.update
+);
 
 export default routes;

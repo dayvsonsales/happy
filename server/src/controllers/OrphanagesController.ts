@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { getRepository } from "typeorm";
+import { getManager, getRepository, Transaction } from "typeorm";
 import * as Yup from "yup";
 
 import orphanagesView from "../views/orphanages_view";
 import Orphanage from "../models/Orphanage";
+import Image from "../models/Image";
 
 export default {
   async index(request: Request, response: Response) {
@@ -64,8 +65,9 @@ export default {
       about,
       instructions,
       opening_hours,
-      open_on_weekends,
+      open_on_weekends: open_on_weekends === "true",
       images,
+      pending: true,
     };
 
     const schema = Yup.object().shape({
@@ -94,5 +96,89 @@ export default {
     await orphanagesRepository.save(orphanage);
 
     return response.status(201).json(orphanagesView.render(orphanage));
+  },
+
+  async update(request: Request, response: Response) {
+    await getManager().transaction(async (transactionalEntityManager) => {
+      const {
+        name,
+        latitude,
+        longitude,
+        about,
+        instructions,
+        opening_hours,
+        open_on_weekends,
+      } = request.body;
+
+      const { id } = request.params;
+
+      const orphanagesRepository = getRepository(Orphanage);
+
+      const existsOrphanage = await orphanagesRepository.findOne(id, {
+        relations: ["images"],
+      });
+
+      if (!existsOrphanage) {
+        return response.status(404).json({ message: "Not found" });
+      }
+
+      let requestImages;
+      let images;
+
+      if (request.files) {
+        requestImages = request.files as Express.Multer.File[];
+
+        if (requestImages.length > 0) {
+          await transactionalEntityManager.remove(existsOrphanage.images);
+
+          images = requestImages.map((image) => {
+            return {
+              path: image.filename,
+            };
+          });
+        }
+      }
+
+      const data = {
+        id: Number(id),
+        name,
+        latitude,
+        longitude,
+        about,
+        instructions,
+        opening_hours,
+        open_on_weekends: open_on_weekends === "true",
+        images,
+        pending: false,
+      };
+
+      const schema = Yup.object().shape({
+        name: Yup.string().required(),
+        latitude: Yup.number().required(),
+        longitude: Yup.number().required(),
+        about: Yup.string().required().max(300),
+        instructions: Yup.string().required(),
+        opening_hours: Yup.string().required(),
+        open_on_weekends: Yup.boolean().required(),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      const orphanage = orphanagesRepository.create(data);
+
+      await transactionalEntityManager.save(orphanage);
+
+      if (!orphanage.images) {
+        orphanage.images = existsOrphanage.images.map((image: Image) => {
+          return {
+            path: image.path,
+          };
+        }) as Image[];
+      }
+
+      return response.status(201).json(orphanagesView.render(orphanage));
+    });
   },
 };

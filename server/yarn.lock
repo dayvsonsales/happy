@@ -917,6 +917,11 @@
   dependencies:
     "function-bind" "^1.1.1"
 
+"helmet@^4.2.0":
+  "integrity" "sha512-aoiSxXMd0ks1ojYpSCFoCRzgv4rY/uB9jKStaw8PkXwsdLYa/Gq+Nc5l0soH0cwBIsLAlujPnx4HLQs+LaXCrQ=="
+  "resolved" "https://registry.npmjs.org/helmet/-/helmet-4.2.0.tgz"
+  "version" "4.2.0"
+
 "highlight.js@^9.6.0":
   "integrity" "sha512-zBZAmhSupHIl5sITeMqIJnYCDfAEc3Gdkqj65wC1lpI468MMQeeQkhcIAvk+RylAkxrCcI9xy9piHiXeQ1BdzQ=="
   "resolved" "https://registry.npmjs.org/highlight.js/-/highlight.js-9.18.3.tgz"
