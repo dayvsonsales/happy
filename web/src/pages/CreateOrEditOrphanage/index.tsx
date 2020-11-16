@@ -72,7 +72,7 @@ export default function CreateOrEditOrphanage() {
   async function edit() {
     setLoading(true);
     try {
-      await api.post(`/orphanages/edit/${id}`, getData());
+      await api.put(`/orphanages/edit/${id}`, getData());
 
       setShowAlertSuccess(true);
     } catch (e) {
@@ -129,13 +129,15 @@ export default function CreateOrEditOrphanage() {
     formData.append("about", about);
     formData.append("instructions", instructions);
     formData.append("opening_hours", opening_hours);
-    formData.append("open_on_weekends", open_on_weekends.toString());
+    formData.append("open_on_weekends", open_on_weekends ? "true" : "false");
     formData.append("latitude", latitude.toString());
     formData.append("longitude", longitude.toString());
 
     for (let i = 0; i < files.files.length; i++) {
       formData.append("files", files.files[i]);
     }
+
+    console.log(open_on_weekends ? "true" : "false");
 
     return formData;
   }
@@ -152,6 +154,15 @@ export default function CreateOrEditOrphanage() {
         setLatitude(data.latitude);
         setLongitude(data.longitude);
         setOpenOnWeekends(data.open_on_weekends);
+
+        const images: Image[] = data.images.map((image: Image) => {
+          return {
+            path: image,
+          };
+        });
+
+        setSelectedImages(images);
+
         setNotFound(false);
       } catch (_) {
         setNotFound(true);
@@ -161,6 +172,8 @@ export default function CreateOrEditOrphanage() {
     if (id) {
       loadOrphanage();
     } else {
+      setNotFound(false);
+
       navigator.geolocation.getCurrentPosition((position) => {
         setLatitude(position.coords.latitude);
         setLongitude(position.coords.longitude);
@@ -359,7 +372,7 @@ export default function CreateOrEditOrphanage() {
                       </button>
                       <button
                         type="button"
-                        className={!open_on_weekends ? "active" : ""}
+                        className={open_on_weekends ? "" : "active"}
                         onClick={() => setOpenOnWeekends(false)}
                       >
                         Não
