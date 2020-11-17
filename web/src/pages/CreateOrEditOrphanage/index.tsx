@@ -21,6 +21,8 @@ import "./styles.css";
 import DangerButton from "../../components/DangerButton";
 import { FaCheck, FaTimes } from "react-icons/fa";
 
+import PhoneInput from "react-phone-number-input";
+
 interface OrphanageParams {
   id?: string | undefined;
   type?: string | undefined;
@@ -34,6 +36,7 @@ export default function CreateOrEditOrphanage() {
 
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
+  const [phone_number, setPhoneNumber] = useState("");
   const [instructions, setInstructions] = useState("");
   const [opening_hours, setOpeningHours] = useState("");
   const [open_on_weekends, setOpenOnWeekends] = useState(false);
@@ -130,6 +133,7 @@ export default function CreateOrEditOrphanage() {
 
     formData.append("name", name);
     formData.append("about", about);
+    formData.append("phone_number", phone_number);
     formData.append("instructions", instructions);
     formData.append("opening_hours", opening_hours);
     formData.append("open_on_weekends", open_on_weekends ? "true" : "false");
@@ -175,6 +179,7 @@ export default function CreateOrEditOrphanage() {
 
         setName(data.name);
         setAbout(data.about);
+        setPhoneNumber(data.phone_number as string);
         setInstructions(data.instructions);
         setOpeningHours(data.opening_hours);
         setLatitude(data.latitude);
@@ -338,6 +343,18 @@ export default function CreateOrEditOrphanage() {
                       value={about}
                       onChange={(e) => setAbout(e.target.value)}
                     />
+                  </div>
+
+                  <div className="input-block">
+                    <label htmlFor="about">Número de Whatsapp</label>
+                    <div>
+                      <PhoneInput
+                        defaultCountry="BR"
+                        placeholder=""
+                        value={phone_number.toString()}
+                        onChange={setPhoneNumber}
+                      />
+                    </div>
                   </div>
 
                   <div className="input-block">

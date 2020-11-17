@@ -117,7 +117,15 @@ export default function ViewOrphanage() {
                   </div>
                 </div>
 
-                <PrimaryButton type="button">
+                <PrimaryButton
+                  type="button"
+                  onClick={() =>
+                    window.open(
+                      `https://wa.me/${orphanage.phone_number}`,
+                      "__blank"
+                    )
+                  }
+                >
                   <FaWhatsapp size={20} color="#FFF" />
                   Entrar em contato
                 </PrimaryButton>

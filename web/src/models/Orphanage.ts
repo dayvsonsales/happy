@@ -9,6 +9,7 @@ export interface Orphanage {
   instructions: string;
   open_on_weekends: boolean;
   opening_hours: string;
+  phone_number: string;
   pending?: boolean;
   images?: Image[];
 }
