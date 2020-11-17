@@ -1,10 +1,12 @@
 import { Router } from "express";
 import multer from "multer";
 import multerConfig from "./config/multer";
+import AcceptOrphanageController from "./controllers/AcceptOrphanageController";
 import LoginController from "./controllers/auth/LoginController";
 import ResetPasswordController from "./controllers/auth/ResetPasswordController";
 
 import OrphanagesController from "./controllers/OrphanagesController";
+import RefuseOrphanageController from "./controllers/RefuseOrphanageController";
 import UsersController from "./controllers/UsersController";
 
 import AuthMiddleware from "./middlewares/AuthMiddleware";
@@ -23,6 +25,10 @@ routes.use(AuthMiddleware);
 routes.get("/users", UsersController.index);
 routes.get("/orphanages", OrphanagesController.index);
 routes.get("/orphanages/:id", OrphanagesController.show);
+routes.post("/orphanages/:id/refuse", RefuseOrphanageController.create);
+routes.post("/orphanages/:id/accept", AcceptOrphanageController.create);
+routes.delete("/orphanages/:id", OrphanagesController.destroy);
+
 routes.put(
   "/orphanages/edit/:id",
   upload.array("files"),

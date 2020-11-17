@@ -181,4 +181,22 @@ export default {
       return response.status(201).json(orphanagesView.render(orphanage));
     });
   },
+
+  async destroy(request: Request, response: Response) {
+    const { id } = request.params;
+
+    const orphanagesRepository = getRepository(Orphanage);
+
+    const orphanage = await orphanagesRepository.findOne(id, {
+      relations: ["images"],
+    });
+
+    if (!orphanage) {
+      return response.status(404).json({ message: "Not Found" });
+    }
+
+    await orphanagesRepository.remove(orphanage);
+
+    return response.status(204).json(orphanagesView.render(orphanage));
+  },
 };
