@@ -45,6 +45,13 @@ export default function Routes() {
           isPrivate
           landing
         />
+        <Route
+          exact
+          path="/orphanages/edit/:id/:type"
+          component={CreateOrEditOrphanage}
+          isPrivate
+          landing
+        />
         <Route exact path="/orphanages/:id" component={Orphanage} landing />
 
         <Route path="/login" component={Login} />

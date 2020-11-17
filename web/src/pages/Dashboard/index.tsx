@@ -17,6 +17,7 @@ const Dashboard: React.FC = () => {
 
   const query = useQuery(useLocation().search);
   const pending = query.get("type") === "pending";
+  const [reload, setReload] = useState<boolean>(false);
 
   const orphanagesCount = useMemo(() => {
     return orphanages ? orphanages.length : 0;
@@ -30,7 +31,7 @@ const Dashboard: React.FC = () => {
     }
 
     loadOrphanages();
-  }, [pending]);
+  }, [pending, reload]);
 
   return (
     <div className="wrapper-dashboard">
@@ -54,7 +55,11 @@ const Dashboard: React.FC = () => {
             <div className="grid-dashboard">
               <Grid>
                 {orphanages?.map((orphanage) => (
-                  <Card key={orphanage.id} orphanage={orphanage} />
+                  <Card
+                    key={orphanage.id}
+                    orphanage={orphanage}
+                    callback={() => setReload(!reload)}
+                  />
                 ))}
               </Grid>
             </div>

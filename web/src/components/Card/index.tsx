@@ -1,5 +1,5 @@
 import { Marker } from "react-leaflet";
-import React from "react";
+import React, { useState } from "react";
 import Map from "../Map";
 import L from "leaflet";
 
@@ -11,8 +11,10 @@ import { Orphanage } from "../../models/Orphanage";
 
 import arrow from "../../assets/images/arrow.svg";
 
-import "./styles.css";
 import { useHistory } from "react-router-dom";
+import Delete from "../Actions/Delete";
+
+import "./styles.css";
 
 const happyMapIcon = L.icon({
   iconUrl: mapMarkerImg,
@@ -22,41 +24,74 @@ const happyMapIcon = L.icon({
   popupAnchor: [170, 2],
 });
 
-const Card: React.FC<{ orphanage: Orphanage }> = ({ orphanage }) => {
+const Card: React.FC<{ orphanage: Orphanage; callback(): void }> = ({
+  orphanage,
+  callback,
+}) => {
   const history = useHistory();
 
-  return (
-    <div className="container-card">
-      <div className="container-map">
-        <Map
-          interactive={false}
-          center={[orphanage.latitude, orphanage.longitude]}
-        >
-          <Marker
-            icon={happyMapIcon}
-            position={[orphanage.latitude, orphanage.longitude]}
-          />
-        </Map>
-      </div>
+  const [showDeleteWarning, setShowDeleteWarning] = useState<boolean>(false);
 
-      <div className="card-information">
-        <p>{orphanage.name}</p>
-        <div>
-          {orphanage.pending ? (
-            <img id="arrow" src={arrow} alt="Show orphanage" />
-          ) : (
-            <>
+  async function handleDelete() {
+    setShowDeleteWarning(true);
+  }
+
+  return (
+    <>
+      {showDeleteWarning && (
+        <Delete
+          id={orphanage.id}
+          callback={() => {
+            callback();
+            setShowDeleteWarning(false);
+          }}
+        />
+      )}
+      <div className="container-card">
+        <div className="container-map">
+          <Map
+            interactive={false}
+            center={[orphanage.latitude, orphanage.longitude]}
+          >
+            <Marker
+              icon={happyMapIcon}
+              position={[orphanage.latitude, orphanage.longitude]}
+            />
+          </Map>
+        </div>
+
+        <div className="card-information">
+          <p>{orphanage.name}</p>
+          <div>
+            {orphanage.pending ? (
               <img
-                src={editIcon}
-                alt="Edit orphanage"
-                onClick={() => history.push(`/orphanages/edit/${orphanage.id}`)}
+                id="arrow"
+                src={arrow}
+                alt="Show orphanage"
+                onClick={() =>
+                  history.push(`/orphanages/edit/${orphanage.id}/pending`)
+                }
               />
-              <img src={deleteIcon} alt="Delete orphanage" />
-            </>
-          )}
+            ) : (
+              <>
+                <img
+                  src={editIcon}
+                  alt="Edit orphanage"
+                  onClick={() =>
+                    history.push(`/orphanages/edit/${orphanage.id}`)
+                  }
+                />
+                <img
+                  src={deleteIcon}
+                  alt="Delete orphanage"
+                  onClick={() => handleDelete()}
+                />
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

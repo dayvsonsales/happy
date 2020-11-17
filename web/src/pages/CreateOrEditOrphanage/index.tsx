@@ -18,9 +18,12 @@ import { Image } from "../../models/Image";
 import noContent from "../../assets/images/no-content.svg";
 
 import "./styles.css";
+import DangerButton from "../../components/DangerButton";
+import { FaCheck, FaTimes } from "react-icons/fa";
 
 interface OrphanageParams {
   id?: string | undefined;
+  type?: string | undefined;
 }
 
 const DEFAULT_LATITUDE = -27.2092052;
@@ -45,7 +48,7 @@ export default function CreateOrEditOrphanage() {
   const [error, setError] = useState<boolean>(false);
   const [notFound, setNotFound] = useState<boolean>(true);
 
-  const { id } = useParams<OrphanageParams>();
+  const { id, type } = useParams<OrphanageParams>();
 
   function moveMaker(e: LeafletMouseEvent) {
     const { lat, lng } = e.latlng;
@@ -137,15 +140,38 @@ export default function CreateOrEditOrphanage() {
       formData.append("files", files.files[i]);
     }
 
-    console.log(open_on_weekends ? "true" : "false");
-
     return formData;
+  }
+
+  async function accept() {
+    try {
+      await api.post(`/orphanages/${id}/accept`);
+      setShowAlertSuccess(true);
+      setError(false);
+    } catch (e) {
+      setError(true);
+    }
+  }
+
+  async function refuse() {
+    try {
+      await api.post(`/orphanages/${id}/refuse`);
+      setShowAlertSuccess(true);
+      setError(false);
+    } catch (e) {
+      setError(true);
+    }
   }
 
   useEffect(() => {
     async function loadOrphanage() {
       try {
         const { data } = await api.get(`/orphanages/${id}`);
+
+        if (!data.pending && type === "pending") {
+          history.push("/dashboard");
+          return;
+        }
 
         setName(data.name);
         setAbout(data.about);
@@ -169,26 +195,59 @@ export default function CreateOrEditOrphanage() {
       }
     }
 
-    if (id) {
-      loadOrphanage();
+    if (type && type !== "pending") {
+      history.push("/dashboard");
     } else {
-      setNotFound(false);
+      if (id) {
+        loadOrphanage();
+      } else {
+        setNotFound(false);
 
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLatitude(position.coords.latitude);
-        setLongitude(position.coords.longitude);
-      });
+        navigator.geolocation.getCurrentPosition((position) => {
+          setLatitude(position.coords.latitude);
+          setLongitude(position.coords.longitude);
+        });
+      }
+
+      setTimeout(() => {
+        if (type === "pending") {
+          const elements = document.querySelectorAll(
+            "input, textarea, .pending-button"
+          );
+
+          for (let i = 0; i < elements.length; i++) {
+            elements[i].setAttribute("disabled", "true");
+          }
+        }
+      }, 1000);
     }
-  }, [id]);
+  }, [id, type, history]);
 
   return (
     <div id="page-create-orphanage">
       <Sidebar />
-      {showAlertSuccess && !id && (
+      {showAlertSuccess && id && (
         <Done
           alertMessage="O orfanato foi editado com sucesso!"
           alertButtonMessage="Voltar"
-          callback={() => setShowAlertSuccess(false)}
+          callback={() => history.push("/dashboard")}
+        />
+      )}
+
+      {showAlertSuccess && !id && (
+        <Done
+          alertMessage="O cadastro deu certo e foi enviado ao administrador para
+          ser aprovado. Agora é só esperar :)"
+          alertButtonMessage="Voltar para o mapa"
+          callback={() => history.push("/app")}
+        />
+      )}
+
+      {showAlertSuccess && type && (
+        <Done
+          alertMessage="Tudo certo! O status foi alterado!"
+          alertButtonMessage="Voltar"
+          callback={() => history.push("/dashboard")}
         />
       )}
 
@@ -209,14 +268,6 @@ export default function CreateOrEditOrphanage() {
         </main>
       ) : (
         <>
-          {showAlertSuccess && (
-            <Done
-              alertMessage="O cadastro deu certo e foi enviado ao administrador para
-          ser aprovado. Agora é só esperar :)"
-              alertButtonMessage="Voltar para o mapa"
-              callback={() => history.push("/app")}
-            />
-          )}
           <main>
             <div className="wrapper-form">
               <form className="create-orphanage-form" onSubmit={handleSubmit}>
@@ -365,14 +416,22 @@ export default function CreateOrEditOrphanage() {
                     <div className="button-select">
                       <button
                         type="button"
-                        className={open_on_weekends ? "active" : ""}
+                        className={
+                          open_on_weekends
+                            ? "pending-button active"
+                            : "pending-button"
+                        }
                         onClick={() => setOpenOnWeekends(true)}
                       >
                         Sim
                       </button>
                       <button
                         type="button"
-                        className={open_on_weekends ? "" : "active"}
+                        className={
+                          open_on_weekends
+                            ? "pending-button"
+                            : "pending-button active"
+                        }
                         onClick={() => setOpenOnWeekends(false)}
                       >
                         Não
@@ -385,12 +444,27 @@ export default function CreateOrEditOrphanage() {
                     Aconteceu um erro ao cadastrar/editar orfanato.
                   </div>
                 )}
-                {!loading ? (
-                  <PrimaryButton type="submit">Confirmar</PrimaryButton>
+                {type === "pending" ? (
+                  <div className="group-button-pending">
+                    <DangerButton type="button" onClick={() => refuse()}>
+                      <FaTimes />
+                      Recusar
+                    </DangerButton>
+                    <PrimaryButton type="button" onClick={() => accept()}>
+                      <FaCheck />
+                      Aceitar
+                    </PrimaryButton>
+                  </div>
                 ) : (
-                  <PrimaryButton type="submit" disabled>
-                    Aguarde...
-                  </PrimaryButton>
+                  <>
+                    {!loading ? (
+                      <PrimaryButton type="submit">Confirmar</PrimaryButton>
+                    ) : (
+                      <PrimaryButton type="submit" disabled>
+                        Aguarde...
+                      </PrimaryButton>
+                    )}
+                  </>
                 )}
               </form>
             </div>
