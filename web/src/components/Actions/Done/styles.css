@@ -1,4 +1,4 @@
-.container-delete {
+.container-done {
   display: flex;
   flex-direction: row;
 
@@ -19,7 +19,7 @@
   z-index: 10;
 }
 
-.message-container {
+.message-container-done {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,14 +31,14 @@
   width: 400px;
 }
 
-.message-container > button {
+.message-container-done > button {
   background: #31b272;
   border-radius: 20px;
   opacity: 1;
   border: 1px solid #31b272;
 }
 
-.title {
+.title-done {
   font-family: Nunito;
   font-style: normal;
   font-weight: 800;
@@ -52,7 +52,7 @@
   color: #ffffff;
 }
 
-.subtitle {
+.subtitle-done {
   margin-top: 20px;
   font-family: Nunito;
   font-style: normal;
@@ -73,12 +73,12 @@
 }
 
 @media (max-width: 1024px) {
-  .message-container {
+  .message-container-done {
     margin-left: auto;
     margin-right: auto;
   }
 
-  .icon {
+  .icon-done {
     width: 250x;
     height: 250px;
   }

@@ -16,7 +16,7 @@
   overflow-x: scroll;
   flex-wrap: wrap-reverse;
 
-  z-index: 10;
+  z-index: 10000;
 }
 
 .message-container {

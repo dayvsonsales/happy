@@ -1,8 +1,8 @@
 import React from "react";
 
-import "./styles.css";
-
 import doneIcon from "../../../assets/images/done-icon.svg";
+
+import "./styles.css";
 
 const Done: React.FC<{
   alertMessage: string;
@@ -10,14 +10,14 @@ const Done: React.FC<{
   callback: any;
 }> = ({ alertMessage, alertButtonMessage, callback = () => {} }) => {
   return (
-    <div className="container-delete">
-      <div className="message-container">
-        <p className="title">Ebaa!</p>
-        <p className="subtitle">{alertMessage}</p>
+    <div className="container-done">
+      <div className="message-container-done">
+        <p className="title-done">Ebaa!</p>
+        <p className="subtitle-done">{alertMessage}</p>
         <button onClick={(e) => callback(e)}>{alertButtonMessage}</button>
       </div>
       <div>
-        <img className="icon" src={doneIcon} alt="Done" />
+        <img className="icon-done" src={doneIcon} alt="Done" />
       </div>
     </div>
   );
