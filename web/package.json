@@ -10,7 +10,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-phone-number-input": "^3.0.6",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "leaflet": "^1.7.1",
     "pigeon-maps": "^0.16.1",
     "react": "^16.13.1",
